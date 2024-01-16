@@ -1,5 +1,7 @@
 import { ethers } from 'ethers';
 import * as dotenv from "dotenv"; 
+import { Parser } from 'json2csv';
+const fs = require('fs');
 
 dotenv.config();
 
@@ -13,6 +15,7 @@ async function getTransactionsInDay(
     startBlock: number, 
     endBlock: number
 ): Promise<any> {
+    console.log(" =================================== [Get Tx : Start] =================================== ");
     // トランザクション用の配列
     let transactions: any = [];
 
@@ -33,14 +36,33 @@ async function getTransactionsInDay(
       }
     }
 
+    console.log(" =================================== [Get Tx : End] =================================== ");
     return transactions;
 }
 
 /**
- * 任意の期間でのトランザクションデータを取得するスクリプト
+ * 取得したトランザクションデータをCSVに変換する関数
+ * @param jsonData トランザクションデータを格納したJsonファイル
+ */
+async function convert2Csv(jsonData: any) {
+    console.log(" =================================== [Convert : Start] =================================== ");
+
+    // JSONデータをCSVに変換
+    const json2csvParser = new Parser();
+    const csvData = json2csvParser.parse(jsonData);
+    // CSVデータをファイルに書き込み
+    fs.writeFileSync('./data/output.csv', csvData, 'utf-8');
+
+    console.log('Conversion complete. CSV file created: data/output.csv');
+    console.log(" =================================== [Convert : End] =================================== ");
+}
+
+
+/**
+ * 任意の期間でのトランザクションデータを取得しCSVに変換するスクリプト
  */
 async function main() {
-    console.log(" =================================== [Get Tx : Start] =================================== ");
+    console.log(" =================================== [Start] =================================== ");
 
     const infuraUrl = `https://sepolia.infura.io/v3/${process.env.API_KEY}`;
     // イーサリアムプロバイダーの作成
@@ -56,7 +78,9 @@ async function main() {
 
     console.log(`${JSON.stringify(transactions)}`)
 
-    console.log(" =================================== [Get Tx : End] =================================== ");
+    await convert2Csv(JSON.parse(JSON.stringify(transactions)))
+
+    console.log(" =================================== [End] =================================== ");
 }
 
 main()
