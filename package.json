@@ -1,0 +1,19 @@
+{
+  "name": "SampleGetTxScript",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/mashharuki/SampleGetTxScript.git",
+  "author": "Haruki Kondo",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node ./src/index.ts"
+  },
+  "dependencies": {
+    "@types/node": "^20.11.4",
+    "axios": "^1.6.5",
+    "dotenv": "^16.3.1",
+    "ethers": "5.7.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
